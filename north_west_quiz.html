@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inter-Qiadat Quiz Championship — Grand Final</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --teal:        #1C5E6B;
+  --teal-dark:   #144550;
+  --teal-light:  #2A7A8A;
+  --amber:       #C49A2A;
+  --amber-light: #E8BF5A;
+  --amber-bg:    #F5E8C0;
+  --amber-pale:  #FBF4E0;
+  --white:       #FFFFFF;
+  --off-white:   #F8F5EF;
+  --text:        #1A1A1A;
+  --text-mid:    #4A4A4A;
+  --text-dim:    #888888;
+  --border:      #D8CCAA;
+  --pts1: #2E7D32;
+  --pts2: #1565C0;
+  --pts3: #C49A2A;
+  --pts4: #BF360C;
+  --pts5: #6A1B9A;
+}
+
+html, body {
+  width: 100%; height: 100%; overflow: hidden;
+  background: var(--off-white);
+  font-family: 'Barlow', sans-serif;
+  color: var(--text);
+}
+
+/* scrollbar */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* ── SETUP SCREEN ────────────────────────────────────── */
+#setup-screen {
+  position: fixed; inset: 0; z-index: 100;
+  background: var(--teal-dark);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+}
+
+#setup-box {
+  background: var(--white);
+  border-top: 5px solid var(--amber);
+  border-radius: 4px;
+  padding: 44px 52px;
+  width: 100%;
+  max-width: 620px;
+}
+
+.setup-org {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 4px;
+}
+
+.setup-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 34px;
+  font-weight: 800;
+  color: var(--teal-dark);
+  letter-spacing: 0.02em;
+  line-height: 1.1;
+  margin-bottom: 4px;
+}
+
+.setup-title span { color: var(--amber); }
+
+.setup-date {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 32px;
+  font-weight: 500;
+}
+
+.setup-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 28px 0;
+}
+
+.setup-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 16px;
+}
+
+/* Rules list */
+.rules-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+.rules-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 14px;
+  color: var(--text-mid);
+  line-height: 1.55;
+}
+
+.rule-icon {
+  flex-shrink: 0;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--teal-dark);
+  color: var(--amber-light);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  margin-top: 1px;
+}
+
+.rules-list strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.start-btn {
+  width: 100%;
+  margin-top: 36px;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--teal);
+  border: none;
+  padding: 15px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.start-btn:hover { background: var(--teal-light); }
+
+/* ── MAIN APP ─────────────────────────────────────────── */
+#app {
+  display: none;
+  width: 100%; height: 100vh;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* HEADER */
+#app-header {
+  background: var(--teal-dark);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px;
+  height: 52px;
+  flex-shrink: 0;
+  border-bottom: 3px solid var(--amber);
+}
+
+.header-org {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.55);
+  text-transform: uppercase;
+}
+
+.header-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: 0.04em;
+}
+
+.header-title span { color: var(--amber-light); }
+
+.header-badge {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--teal-dark);
+  background: var(--amber-light);
+  padding: 4px 14px;
+  border-radius: 2px;
+}
+
+/* Header controls */
+#header-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hdr-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 2px;
+  border: 1px solid;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#undo-btn {
+  color: var(--amber-light);
+  background: rgba(232,191,90,0.12);
+  border-color: rgba(232,191,90,0.35);
+}
+#undo-btn:hover:not(:disabled) {
+  background: rgba(232,191,90,0.22);
+}
+#undo-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+#reset-board-btn {
+  color: rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.18);
+}
+#reset-board-btn:hover {
+  background: rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.9);
+}
+
+/* Reset confirm overlay */
+#reset-confirm-overlay {
+  position: fixed; inset: 0; z-index: 800;
+  background: rgba(10,30,35,0.75);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.2s, visibility 0.2s;
+  padding: 20px;
+}
+#reset-confirm-overlay.active {
+  opacity: 1; visibility: visible;
+}
+#reset-confirm-box {
+  background: var(--white);
+  border-top: 5px solid #C62828;
+  border-radius: 5px;
+  padding: 32px 36px;
+  max-width: 400px;
+  width: 100%;
+  text-align: center;
+  transform: scale(0.95);
+  transition: transform 0.25s cubic-bezier(0.17,0.89,0.32,1.28);
+}
+#reset-confirm-overlay.active #reset-confirm-box {
+  transform: scale(1);
+}
+.confirm-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: #C62828;
+  margin-bottom: 8px;
+}
+.confirm-msg {
+  font-size: 13px;
+  color: var(--text-mid);
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+.confirm-btns {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+.confirm-yes {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: white; background: #C62828;
+  border: none; padding: 9px 24px;
+  border-radius: 3px; cursor: pointer;
+  transition: background 0.15s;
+}
+.confirm-yes:hover { background: #B71C1C; }
+.confirm-no {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--text-dim); background: transparent;
+  border: 1px solid var(--border); padding: 9px 24px;
+  border-radius: 3px; cursor: pointer;
+  transition: background 0.15s;
+}
+.confirm-no:hover { background: var(--off-white); color: var(--text); }
+
+/* BODY — board fills full width, no right panel on main view */
+#app-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* BOARD AREA */
+#board-area {
+  display: flex;
+  flex-direction: column;
+  padding: 16px 20px;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+#cat-headers {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.cat-header {
+  background: var(--teal-dark);
+  color: var(--white);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(11px, 1.3vw, 15px);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  text-align: center;
+  padding: 10px 8px;
+  border-radius: 4px;
+  line-height: 1.2;
+  min-height: 50px;
+  display: flex; align-items: center; justify-content: center;
+}
+
+#board-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: repeat(5, 1fr);
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+}
+
+/* CARD */
+.card-slot {
+  perspective: 900px;
+  cursor: pointer;
+}
+
+.card-slot.removed {
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.card-inner {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.45s cubic-bezier(0.35, 0, 0.25, 1);
+}
+
+/* No flip animation on cards — modal handles the question display */
+
+.card-front, .card-back {
+  position: absolute; inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 4px;
+}
+
+.card-front {
+  background: var(--white);
+  border: 2px solid var(--border);
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+
+.card-slot:hover:not(.removed) .card-front {
+  background: var(--amber-pale);
+  border-color: var(--amber);
+  box-shadow: 0 4px 16px rgba(196,154,42,0.18);
+}
+
+.card-slot.used .card-front {
+  background: #f0f0f0;
+  border-color: #ccc;
+  cursor: default;
+  opacity: 0.45;
+}
+.card-slot.used:hover .card-front {
+  background: #f0f0f0;
+  border-color: #ccc;
+  box-shadow: none;
+}
+
+.card-pts {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: clamp(22px, 3vw, 42px);
+  font-weight: 800;
+  line-height: 1;
+}
+
+.card-slot[data-pts="1"] .card-pts { color: var(--pts1); }
+.card-slot[data-pts="2"] .card-pts { color: var(--pts2); }
+.card-slot[data-pts="3"] .card-pts { color: var(--pts3); }
+.card-slot[data-pts="4"] .card-pts { color: var(--pts4); }
+.card-slot[data-pts="5"] .card-pts { color: var(--pts5); }
+
+.card-pts-label {
+  font-family: 'Barlow', sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* ── QUESTION MODAL OVERLAY ───────────────────────────── */
+#question-overlay {
+  position: fixed; inset: 0; z-index: 999;
+  background: rgba(10, 30, 35, 0.82);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.3s, visibility 0.3s;
+  padding: 20px;
+}
+
+#question-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+#question-modal {
+  width: min(860px, 90vw);
+  background: var(--white);
+  border-top: 6px solid var(--amber);
+  border-radius: 6px;
+  padding: 36px 40px 32px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.4);
+  transform: translateY(24px) scale(0.97);
+  transition: transform 0.35s cubic-bezier(0.17, 0.89, 0.32, 1.28), opacity 0.3s;
+  opacity: 0;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+#question-overlay.active #question-modal {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+#modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  gap: 12px;
+}
+
+.modal-cat-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--white);
+  background: var(--teal);
+  padding: 4px 12px;
+  border-radius: 3px;
+}
+
+.modal-pts-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--amber);
+  letter-spacing: 0.05em;
+}
+
+#modal-question {
+  font-size: clamp(20px, 2.4vw, 30px);
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--text);
+  margin-bottom: 28px;
+  min-height: 60px;
+}
+
+/* Timer inside modal */
+#modal-timer-wrap {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 16px 20px;
+  background: var(--off-white);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+#modal-timer-ring {
+  position: relative;
+  width: 72px; height: 72px;
+  flex-shrink: 0;
+}
+
+#modal-timer-svg {
+  width: 72px; height: 72px;
+  transform: rotate(-90deg);
+}
+
+#modal-timer-bg { fill: none; stroke: var(--border); stroke-width: 6; }
+#modal-timer-prog {
+  fill: none;
+  stroke: var(--teal);
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear, stroke 0.4s;
+}
+
+#modal-timer-num {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 26px;
+  font-weight: 800;
+  color: var(--teal-dark);
+}
+
+#modal-timer-num.urgent { color: #C62828; }
+
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+#modal-timer-num.urgent { animation: blink 0.6s infinite; }
+
+#modal-timer-status {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+/* Answer area */
+#modal-answer-area {
+  display: none;
+  padding: 16px 20px;
+  background: #EFF8F0;
+  border: 1px solid #A5D6A7;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  animation: slideUp 0.3s ease;
+}
+
+#modal-answer-area.visible { display: block; }
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.ans-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #2E7D32;
+  margin-bottom: 6px;
+}
+
+#modal-answer {
+  font-size: clamp(16px, 1.8vw, 22px);
+  font-weight: 700;
+  color: var(--teal-dark);
+  line-height: 1.4;
+}
+
+/* Modal actions */
+#modal-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.m-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 9px 20px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid;
+  transition: background 0.15s, color 0.15s;
+}
+
+#modal-reveal-btn {
+  color: var(--white);
+  background: var(--teal);
+  border-color: var(--teal);
+}
+#modal-reveal-btn:hover { background: var(--teal-light); border-color: var(--teal-light); }
+#modal-reveal-btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+#modal-remove-btn {
+  color: #C62828;
+  background: #FFEBEE;
+  border-color: #EF9A9A;
+}
+#modal-remove-btn:hover { background: #FFCDD2; }
+
+#modal-close-btn {
+  color: var(--text-dim);
+  background: transparent;
+  border-color: var(--border);
+  margin-left: auto;
+}
+#modal-close-btn:hover { background: var(--off-white); color: var(--text); }
+
+/* Complete overlay */
+#complete-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(20, 69, 80, 0.94);
+  align-items: center; justify-content: center;
+}
+#complete-overlay.show { display: flex; }
+</style>
+</head>
+<body>
+
+<!-- SETUP SCREEN -->
+<div id="setup-screen">
+  <div id="setup-box">
+    <div class="setup-org">Majlis Khuddamul Ahmadiyya — North West Region</div>
+    <div class="setup-title">Inter-Qiadat <span>Quiz Championship</span></div>
+    <div class="setup-date">Regional Faith &amp; Dialogue Forum · Sun, 14th June · Darul Amaan Mosque</div>
+
+    <div class="setup-divider"></div>
+
+    <div class="setup-label">How to Play</div>
+    <ul class="rules-list">
+      <li>
+        <div class="rule-icon">1</div>
+        <span>Each team tells the quizmaster a <strong>category</strong> and a <strong>difficulty level</strong> (1–5 points) to select their question.</span>
+      </li>
+      <li>
+        <div class="rule-icon">2</div>
+        <span><strong>Correct answer</strong> — the team earns points equal to the difficulty level chosen.</span>
+      </li>
+      <li>
+        <div class="rule-icon">3</div>
+        <span><strong>Wrong answer</strong> — the team loses points equal to the difficulty level chosen.</span>
+      </li>
+      <li>
+        <div class="rule-icon">4</div>
+        <span>Once a question is selected it is <strong>removed from the board</strong> and cannot be chosen again.</span>
+      </li>
+      <li>
+        <div class="rule-icon">5</div>
+        <span>The quiz is played over <strong>3 rounds</strong>. The team with the most points at the end wins!</span>
+      </li>
+    </ul>
+
+    <button class="start-btn" id="start-btn">Begin Championship →</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <div id="app-header">
+    <div>
+      <div class="header-org">Majlis Khuddamul Ahmadiyya — NW Region</div>
+      <div class="header-title">Inter-Qiadat <span>Quiz Championship</span></div>
+    </div>
+    <div id="header-controls">
+      <button class="hdr-btn" id="undo-btn" disabled title="Undo last removal">↩ Undo</button>
+      <button class="hdr-btn" id="reset-board-btn" title="Reset entire board">⟳ Reset Board</button>
+      <div class="header-badge">Grand Final</div>
+    </div>
+  </div>
+
+  <div id="app-body">
+    <div id="board-area">
+      <div id="cat-headers"></div>
+      <div id="board-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- QUESTION MODAL -->
+<div id="question-overlay">
+  <div id="question-modal">
+    <div id="modal-header">
+      <span class="modal-cat-tag" id="modal-category"></span>
+      <span class="modal-pts-tag" id="modal-points"></span>
+    </div>
+
+    <div id="modal-question"></div>
+
+    <div id="modal-timer-wrap">
+      <div id="modal-timer-ring">
+        <svg id="modal-timer-svg" viewBox="0 0 72 72">
+          <circle id="modal-timer-bg" cx="36" cy="36" r="30"/>
+          <circle id="modal-timer-prog" cx="36" cy="36" r="30"/>
+        </svg>
+        <div id="modal-timer-num">30</div>
+      </div>
+      <div id="modal-timer-status">Timer running</div>
+    </div>
+
+    <div id="modal-answer-area">
+      <div class="ans-label">Answer</div>
+      <div id="modal-answer"></div>
+    </div>
+
+    <div id="modal-actions">
+      <button class="m-btn" id="modal-reveal-btn">Reveal Answer</button>
+      <button class="m-btn" id="modal-remove-btn">✕ Remove from Board</button>
+      <button class="m-btn" id="modal-close-btn">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- RESET CONFIRM OVERLAY -->
+<div id="reset-confirm-overlay">
+  <div id="reset-confirm-box">
+    <div class="confirm-title">Reset Board?</div>
+    <div class="confirm-msg">This will restore all 25 cards to their original state, including any that have been removed. This cannot be undone.</div>
+    <div class="confirm-btns">
+      <button class="confirm-no" id="confirm-no-btn">Cancel</button>
+      <button class="confirm-yes" id="confirm-yes-btn">Yes, Reset</button>
+    </div>
+  </div>
+</div>
+
+<!-- COMPLETE OVERLAY -->
+<div id="complete-overlay">
+  <div style="text-align:center;padding:48px;background:white;border-top:5px solid #C49A2A;border-radius:6px;max-width:440px;margin:20px;">
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#C49A2A;margin-bottom:8px;">Majlis Khuddamul Ahmadiyya — NW Region</div>
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:30px;font-weight:800;color:#144550;line-height:1.1;margin-bottom:6px;">Grand Final Complete</div>
+    <div style="font-size:14px;color:#888;margin-bottom:28px;">All 25 questions have been answered. Proceed to prize distribution.</div>
+    <button id="complete-close-btn" style="font-family:'Barlow Condensed',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:white;background:#1C5E6B;border:none;padding:11px 28px;border-radius:3px;cursor:pointer;">Close</button>
+  </div>
+</div>
+
+<script>
+const DURATION = 30;
+const RADIUS   = 30;
+const CIRC     = 2 * Math.PI * RADIUS;
+
+// ── QUESTION DATA ─────────────────────────────────────────────────────────────
+const DEFAULT_DATA = [
+  // Cat 0: Quran & Hadith
+  [
+    { q: "Which Surah is named after an insect?",                                                        a: "Surah An-Nahl (The Bee)" },
+    { q: "Which Surah contains the Light verse (Ayat al-Nur)?",                                         a: "Surah An-Nur (Ch.24)" },
+    { q: "Who is the only companion mentioned by name in the Holy Quran?",                              a: "Zayd bin Harith (RA) — Surah Al-Ahzab" },
+    { q: "Which two Prophets from the same family have Surahs in the Quran named after them?",          a: "Ibrahim and Yusuf (AS)" },
+    { q: "In which Surah does Allah say: whoso obeys Allah and the Messenger shall be among 'the Prophets, the Truthful, the Martyrs, and the Righteous'?", a: "Surah An-Nisa (4:70)" },
+  ],
+  // Cat 1: Seerah & History
+  [
+    { q: "In which city was the Holy Prophet (SAW) born?",                                              a: "Makkah" },
+    { q: "What was the name of the first purpose-built mosque in Islam?",                               a: "Masjid Quba" },
+    { q: "What incident occurred during the Holy Prophet's childhood involving angels?",                 a: "The removal and cleansing of his heart" },
+    { q: "During Isra al-Miraj, what was the name of the tree that marked the boundary of the journey?", a: "Sidrat al-Muntaha" },
+    { q: "Who was the leader of the hypocrites who started the rumour during the incident of Waqia-tul-Ifk?", a: "Abdullah bin Ubayy ibn Salool" },
+  ],
+  // Cat 2: Promised Messiah (AS)
+  [
+    { q: "What was the Promised Messiah's father's name?",                                              a: "Ghulam Murtaza" },
+    { q: "What was the English-language magazine founded by the Promised Messiah (AS)?",                a: "Review of Religions" },
+    { q: "After how many years did the Promised Messiah (AS) prophesy that Ahmadiyyat would reach its peak?", a: "300 years" },
+    { q: "Which book did the Promised Messiah (AS) write following the martyrdom of Hazrat Sahibzada Abdul Latif on 14th July 1903?", a: "Tazkerat ush Shaadatain" },
+    { q: "On 6th March 1897, which person was killed in fulfilment of a prophecy made years earlier by the Promised Messiah (AS)?", a: "Lekh Ram" },
+  ],
+  // Cat 3: General Knowledge
+  [
+    { q: "What is the capital city of Iceland?",                                                        a: "Reykjavík" },
+    { q: "In which country would you find Mount Kilimanjaro?",                                          a: "Tanzania" },
+    { q: "What was the city of Istanbul called before 1930?",                                           a: "Constantinople" },
+    { q: "Which river flows through the Grand Canyon?",                                                 a: "The Colorado River" },
+    { q: "How many stars appear on the Chinese national flag?",                                         a: "5" },
+  ],
+  // Cat 4: Sports & Current Affairs
+  [
+    { q: "Which country has won the most Football World Cups?",                                         a: "Brazil (5 times)" },
+    { q: "Which team won the FA Cup in the most recent final at the time of this event?",               a: "Manchester United" },
+    { q: "Who won the Wimbledon Men's Singles title in 2024?",                                          a: "Carlos Alcaraz" },
+    { q: "Which football team plays their home matches at Valley Parade?",                              a: "Bradford City" },
+    { q: "Which England goalkeeper picked up 6 yellow cards in 2024 without committing a single foul — and what were they for?", a: "Jordan Pickford — 3 for dissent, 3 for time wasting" },
+  ],
+];
+
+// ── STATE ────────────────────────────────────────────────────────────────────
+let S = {
+  cats: [],
+  data: [],
+  removed: {},      // "c-p" → true
+  undoStack: [],    // array of "c-p" keys, most recent last
+  active: null,     // { c, p }
+  revealed: false,
+  timerVal: DURATION,
+  timerRunning: false,
+  timerInterval: null,
+};
+
+function syncUndoBtn() {
+  document.getElementById('undo-btn').disabled = S.undoStack.length === 0;
+}
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+
+document.getElementById('start-btn').addEventListener('click', () => {
+  S.cats = ['Quran & Hadith','Seerah & History','Promised Messiah','General Knowledge','Sports & Current Affairs'];
+  S.data = DEFAULT_DATA.map(col => col.map(cell => ({ q: cell.q, a: cell.a })));
+
+  S.removed   = {};
+  S.undoStack = [];
+  S.active    = null;
+
+  document.getElementById('setup-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  syncUndoBtn();
+  buildBoard();
+});
+
+// ── BUILD BOARD ──────────────────────────────────────────────────────────────
+function buildBoard() {
+  const catHdr = document.getElementById('cat-headers');
+  const grid   = document.getElementById('board-grid');
+  catHdr.innerHTML = '';
+  grid.innerHTML   = '';
+
+  S.cats.forEach(name => {
+    const h = document.createElement('div');
+    h.className   = 'cat-header';
+    h.textContent = name;
+    catHdr.appendChild(h);
+  });
+
+  // Rows = point values 1–5, Cols = categories 0–4
+  for (let p = 0; p < 5; p++) {
+    for (let c = 0; c < 5; c++) {
+      const slot = document.createElement('div');
+      slot.className    = 'card-slot';
+      slot.dataset.pts  = p + 1;
+      slot.id           = `card-${c}-${p}`;
+      slot.innerHTML = `
+        <div class="card-inner">
+          <div class="card-front">
+            <div class="card-pts">${p + 1}</div>
+            <div class="card-pts-label">point${p === 0 ? '' : 's'}</div>
+          </div>
+        </div>`;
+      slot.addEventListener('click', () => selectCard(c, p));
+      grid.appendChild(slot);
+    }
+  }
+}
+
+// ── SELECT CARD ──────────────────────────────────────────────────────────────
+function selectCard(c, p) {
+  const key  = `${c}-${p}`;
+  const slot = document.getElementById(`card-${c}-${p}`);
+  if (!slot || slot.classList.contains('removed') || slot.classList.contains('used')) return;
+
+  S.active   = { c, p };
+  S.revealed = false;
+
+  openModal(c, p);
+}
+
+// ── MODAL ────────────────────────────────────────────────────────────────────
+const timerProg   = document.getElementById('modal-timer-prog');
+const timerNum    = document.getElementById('modal-timer-num');
+const timerStatus = document.getElementById('modal-timer-status');
+
+const modalCirc = 2 * Math.PI * RADIUS;
+timerProg.style.strokeDasharray  = modalCirc;
+timerProg.style.strokeDashoffset = 0;
+
+function setTimerVisual(v) {
+  const ratio = v / DURATION;
+  timerProg.style.strokeDashoffset = modalCirc * (1 - ratio);
+  timerNum.textContent = v;
+
+  if (v <= 5) {
+    timerProg.style.stroke = '#C62828';
+    timerNum.classList.add('urgent');
+  } else if (v <= 10) {
+    timerProg.style.stroke = '#E65100';
+    timerNum.classList.remove('urgent');
+  } else {
+    timerProg.style.stroke = 'var(--teal)';
+    timerNum.classList.remove('urgent');
+  }
+}
+
+function startTimer() {
+  clearInterval(S.timerInterval);
+  S.timerVal     = DURATION;
+  S.timerRunning = true;
+  setTimerVisual(DURATION);
+  timerStatus.textContent = 'Timer running';
+
+  S.timerInterval = setInterval(() => {
+    S.timerVal--;
+    setTimerVisual(S.timerVal);
+    if (S.timerVal <= 0) {
+      clearInterval(S.timerInterval);
+      S.timerRunning = false;
+      timerStatus.textContent = "Time's up!";
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(S.timerInterval);
+  S.timerRunning = false;
+}
+
+function openModal(c, p) {
+  document.getElementById('modal-category').textContent = S.cats[c];
+  document.getElementById('modal-points').textContent   = `${p + 1} Point${p === 0 ? '' : 's'}`;
+  document.getElementById('modal-question').textContent = S.data[c][p].q || '[ No question set ]';
+
+  document.getElementById('modal-answer-area').classList.remove('visible');
+  document.getElementById('modal-reveal-btn').disabled = false;
+
+  document.getElementById('question-overlay').classList.add('active');
+
+  startTimer();
+}
+
+function closeModal() {
+  stopTimer();
+  document.getElementById('question-overlay').classList.remove('active');
+  S.active = null;
+}
+
+// Reveal answer
+document.getElementById('modal-reveal-btn').addEventListener('click', () => {
+  if (!S.active || S.revealed) return;
+  S.revealed = true;
+  stopTimer();
+  timerStatus.textContent = 'Answer revealed';
+
+  const { c, p } = S.active;
+  document.getElementById('modal-answer').textContent = S.data[c][p].a || '[ No answer set ]';
+  document.getElementById('modal-answer-area').classList.add('visible');
+  document.getElementById('modal-reveal-btn').disabled = true;
+});
+
+// Remove from board
+document.getElementById('modal-remove-btn').addEventListener('click', () => {
+  if (!S.active) return;
+  const { c, p } = S.active;
+  const key  = `${c}-${p}`;
+  const slot = document.getElementById(`card-${c}-${p}`);
+
+  S.removed[key] = true;
+  S.undoStack.push(key);
+  syncUndoBtn();
+
+  if (slot) {
+    slot.style.transition = 'opacity 0.35s, transform 0.35s';
+    slot.style.opacity    = '0';
+    slot.style.transform  = 'scale(0.8)';
+    setTimeout(() => {
+      slot.classList.add('removed');
+      slot.style.opacity    = '';
+      slot.style.transform  = '';
+      slot.style.transition = '';
+    }, 350);
+  }
+
+  closeModal();
+
+  if (Object.keys(S.removed).length === 25) {
+    setTimeout(() => {
+      document.getElementById('complete-overlay').classList.add('show');
+    }, 500);
+  }
+});
+
+// Close (return card to board, mark as "used" so it's dimmed but not removed)
+document.getElementById('modal-close-btn').addEventListener('click', () => {
+  if (S.active) {
+    const { c, p } = S.active;
+    const key  = `${c}-${p}`;
+    if (!S.removed[key]) {
+      const slot = document.getElementById(`card-${c}-${p}`);
+      if (slot) slot.classList.add('used');
+    }
+  }
+  closeModal();
+});
+
+// Dismiss complete overlay
+document.getElementById('complete-close-btn').addEventListener('click', () => {
+  document.getElementById('complete-overlay').classList.remove('show');
+});
+
+// Close modal on backdrop click
+document.getElementById('question-overlay').addEventListener('click', (e) => {
+  if (e.target === document.getElementById('question-overlay')) {
+    // Treat as close (same as close button)
+    document.getElementById('modal-close-btn').click();
+  }
+});
+
+// ── UNDO ─────────────────────────────────────────────────────────────────────
+document.getElementById('undo-btn').addEventListener('click', () => {
+  if (S.undoStack.length === 0) return;
+
+  const key  = S.undoStack.pop();
+  delete S.removed[key];
+  syncUndoBtn();
+
+  const [c, p] = key.split('-').map(Number);
+  const slot   = document.getElementById(`card-${c}-${p}`);
+  if (!slot) return;
+
+  // Restore card with a pop-in animation
+  slot.classList.remove('removed', 'used');
+  slot.style.opacity   = '0';
+  slot.style.transform = 'scale(0.7)';
+  slot.style.transition = 'opacity 0.35s ease, transform 0.35s cubic-bezier(0.17,0.89,0.32,1.49)';
+  // Force reflow so transition plays
+  slot.offsetHeight;
+  slot.style.opacity   = '1';
+  slot.style.transform = 'scale(1)';
+  setTimeout(() => {
+    slot.style.transition = '';
+    slot.style.opacity    = '';
+    slot.style.transform  = '';
+  }, 380);
+
+  // Dismiss the "complete" overlay if it's showing
+  document.getElementById('complete-overlay').classList.remove('show');
+});
+
+// ── RESET BOARD ───────────────────────────────────────────────────────────────
+document.getElementById('reset-board-btn').addEventListener('click', () => {
+  document.getElementById('reset-confirm-overlay').classList.add('active');
+});
+
+document.getElementById('confirm-no-btn').addEventListener('click', () => {
+  document.getElementById('reset-confirm-overlay').classList.remove('active');
+});
+
+document.getElementById('confirm-yes-btn').addEventListener('click', () => {
+  document.getElementById('reset-confirm-overlay').classList.remove('active');
+
+  // Close modal if open
+  if (S.active) closeModal();
+
+  // Clear state
+  S.removed   = {};
+  S.undoStack = [];
+  S.active    = null;
+  S.revealed  = false;
+  syncUndoBtn();
+
+  // Dismiss complete overlay
+  document.getElementById('complete-overlay').classList.remove('show');
+
+  // Restore all cards with a staggered pop-in
+  const slots = document.querySelectorAll('.card-slot');
+  slots.forEach((slot, i) => {
+    slot.classList.remove('removed', 'used');
+    slot.style.opacity   = '0';
+    slot.style.transform = 'scale(0.75)';
+    setTimeout(() => {
+      slot.style.transition = 'opacity 0.3s ease, transform 0.3s cubic-bezier(0.17,0.89,0.32,1.49)';
+      slot.style.opacity   = '1';
+      slot.style.transform = 'scale(1)';
+      setTimeout(() => {
+        slot.style.transition = '';
+        slot.style.opacity    = '';
+        slot.style.transform  = '';
+      }, 320);
+    }, i * 18); // stagger each card by 18ms
+  });
+});
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+</script>
+</body>
+</html>
